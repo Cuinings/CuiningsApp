@@ -1,0 +1,30 @@
+def androidConfig = rootProject.ext.androidConfig
+def publicConfig = rootProject.ext.publicConfig
+
+android {
+    compileSdkVersion androidConfig.compileSdkVersion
+    buildToolsVersion androidConfig.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion androidConfig.minSdkVersion
+        targetSdkVersion androidConfig.targetSdkVersion
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    compileOptions {
+        sourceCompatibility publicConfig.sourceCompatibility
+        targetCompatibility publicConfig.targetCompatibility
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation publicConfig.implementations.appcompat
+    implementation publicConfig.implementations.constraintlayout
+    testImplementation publicConfig.implementations.junit
+    androidTestImplementation publicConfig.implementations.junitExt
+    androidTestImplementation publicConfig.implementations.espresso
+}

@@ -1,0 +1,41 @@
+apply plugin: 'com.android.library'
+apply from: '../common.gradle'
+apply plugin: 'maven'
+
+android {
+    defaultConfig {
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+uploadArchives {
+    configuration = configurations.archives
+    repositories {
+        def mavenFile = rootProject.file("maven.properties")
+        def mavenProperties = new Properties()
+        mavenProperties.load(new FileInputStream(mavenFile))
+
+        mavenDeployer {
+            repository (url: mavenProperties['url']) {
+                authentication(
+                        userName: mavenProperties['username'],
+                        password: mavenProperties['password']
+                )
+            }
+            pom.project {
+                version 'v1.0.0-SNAPSHOT'
+                artifactId 'utils'
+                groupId "com.cn.cuinings"
+                packaging 'aar'
+                description 'update version v1.0.0-SNAPSHOT'
+            }
+        }
+    }
+}

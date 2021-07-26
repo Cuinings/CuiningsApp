@@ -1,0 +1,4 @@
+rootProject.name='CuiningsApp'
+include ':app'
+include ':utils'
+include ':permission'

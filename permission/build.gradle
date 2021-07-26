@@ -1,0 +1,98 @@
+apply plugin: 'com.android.library'
+apply from: '../common.gradle'
+apply plugin: 'maven'
+
+def permissionConfig = rootProject.ext.permissionConfig
+
+android {
+    defaultConfig {
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    permissionConfig.implementations.each {k, v -> implementation v}
+}
+
+uploadArchives {
+    configuration = configurations.archives
+    repositories {
+        def mavenFile = rootProject.file("maven.properties")
+        def mavenProperties = new Properties()
+        mavenProperties.load(new FileInputStream(mavenFile))
+
+        mavenDeployer {
+            repository (url: mavenProperties['url']) {
+                authentication(
+                        userName: mavenProperties['username'],
+                        password: mavenProperties['password']
+                )
+            }
+            pom.project {
+                version permissionConfig.mavenVersion//'v1.0.0-SNAPSHOT'
+                artifactId permissionConfig.mavenArtifactId//'permission'
+                groupId permissionConfig.mavenGroupId//"com.cn.cuinings"
+                packaging permissionConfig.mavenPackaging//'aar'
+                description permissionConfig.mavenDescription//'update version v1.0.0-SNAPSHOT'
+            }
+        }
+    }
+}
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+
+import org.aspectj.bridge.IMessage
+import org.aspectj.bridge.MessageHandler
+import org.aspectj.tools.ajc.Main
+final def log = project.logger
+final def variants = android.libraryVariants
+
+variants.all{ variant ->
+    if (!variant.buildType.isDebuggable()) {
+        log.debug("Skipping non-debuggable build type '${variant.buildType.name}'.")
+        return
+    }
+
+    JavaCompile javaCompile = variant.javaCompiler
+    javaCompile.doLast {
+        String[] args = ["-showWeaveInfo",
+                         "-1.8",
+                         "-inpath", javaCompile.destinationDir.toString(),
+                         "-aspectpath", javaCompile.classpath.asPath,
+                         "-d", javaCompile.destinationDir.toString(),
+                         "-classpath", javaCompile.classpath.asPath,
+                         "-bootclasspath", project.android.bootClasspath.join(File.pathSeparator)]
+//        log.debug "ajc args: " + Arrays.toString(args)
+
+        MessageHandler handler = new MessageHandler(true)
+        new Main().run(args, handler)
+        for (IMessage message : handler.getMessages(null, true)) {
+            switch (message.getKind()) {
+                case IMessage.ABORT:
+                case IMessage.ERROR:
+                case IMessage.FAIL:
+                    log.error message.message, message.thrown
+                    break
+                case IMessage.WARNING:
+                    log.warn message.message, message.thrown
+                    break
+                case IMessage.INFO:
+                    log.info message.message, message.thrown
+                    break
+                case IMessage.DEBUG:
+                    log.debug message.message, message.thrown
+                    break
+            }
+        }
+    }
+}
