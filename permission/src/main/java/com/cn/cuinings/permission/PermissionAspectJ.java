@@ -30,7 +30,6 @@ public class PermissionAspectJ {
     @Pointcut("execution(@com.cn.cuinings.permission.annotation.Permission * *(..)) && @annotation(permission)")
     public void methodPointPermission(Permission permission) {}
 
-
     @Around("methodPointPermission(permission)")
     public void aroundProceedingPoint(final ProceedingJoinPoint point, Permission permission) throws Throwable {
         Context context = null;

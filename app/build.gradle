@@ -21,7 +21,7 @@ android {
 }
 
 dependencies {
-    implementation project(path: ':permission')
+//    implementation project(path: ':permission')
     appConfig.implementations.each { k, v -> implementation v}
 }
 

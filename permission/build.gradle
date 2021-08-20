@@ -21,35 +21,6 @@ dependencies {
     permissionConfig.implementations.each {k, v -> implementation v}
 }
 
-uploadArchives {
-    configuration = configurations.archives
-    repositories {
-        def mavenFile = rootProject.file("maven.properties")
-        def mavenProperties = new Properties()
-        mavenProperties.load(new FileInputStream(mavenFile))
-
-        mavenDeployer {
-            repository (url: mavenProperties['url']) {
-                authentication(
-                        userName: mavenProperties['username'],
-                        password: mavenProperties['password']
-                )
-            }
-            pom.project {
-                version permissionConfig.mavenVersion//'v1.0.0-SNAPSHOT'
-                artifactId permissionConfig.mavenArtifactId//'permission'
-                groupId permissionConfig.mavenGroupId//"com.cn.cuinings"
-                packaging permissionConfig.mavenPackaging//'aar'
-                description permissionConfig.mavenDescription//'update version v1.0.0-SNAPSHOT'
-            }
-        }
-    }
-}
-
-configurations.all {
-    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-}
-
 
 import org.aspectj.bridge.IMessage
 import org.aspectj.bridge.MessageHandler
@@ -95,4 +66,37 @@ variants.all{ variant ->
             }
         }
     }
+}
+
+repositories {
+    mavenCentral()
+}
+
+uploadArchives {
+    configuration = configurations.archives
+    repositories {
+        def mavenFile = rootProject.file("maven.properties")
+        def mavenProperties = new Properties()
+        mavenProperties.load(new FileInputStream(mavenFile))
+
+        mavenDeployer {
+            repository (url: mavenProperties['url']) {
+                authentication(
+                        userName: mavenProperties['username'],
+                        password: mavenProperties['password']
+                )
+            }
+            pom.project {
+                version 'v1.0.0-SNAPSHOT'
+                artifactId 'permission'
+                groupId "com.cn.cuining"
+                packaging 'aar'
+                description 'update version v1.0.0-SNAPSHOT'
+            }
+        }
+    }
+}
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }

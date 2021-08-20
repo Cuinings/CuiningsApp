@@ -21,31 +21,31 @@ ext {
     libsConfig = [
             implementationLibs  : [
                     utils               :   'com.cn.cuinings:utils:v1.0.0-SNAPSHOT',
-                    permission          :   'com.cn.cuinings:permission:v1.0.0-SNAPSHOT',
-                    aspectjrt           : 'org.aspectj:aspectjrt:1.9.6',
-                    jetbrains           : 'org.jetbrains:annotations-java5:15.0',
+                    permission          :   'com.cn.cuining:permission:v1.0.0-SNAPSHOT',
+                    aspectjrt           :   'org.aspectj:aspectjrt:1.9.6',
+                    jetbrains           :   'org.jetbrains:annotations-java5:15.0',
             ]
     ]
     appConfig = [
-            applicationId               : "com.cn.cuinings.app",
-            versionCode                 : 1,
-            versionName                 : "1.0.0",
+            applicationId               :   "com.cn.cuinings.app",
+            versionCode                 :   1,
+            versionName                 :   "1.0.0",
 
             implementations     : [
-                    utils               : libsConfig.implementationLibs.utils,
-//                    permission          : libsConfig.implementationLibs.permission,
+                    utils               :   libsConfig.implementationLibs.utils,
+                    permission          :   libsConfig.implementationLibs.permission,
             ]
     ]
     permissionConfig = [
-            mavenVersion                : 'v1.0.0-SNAPSHOT',
-            mavenArtifactId             : 'permission',
-            mavenGroupId                : 'com.cn.cuinings',
-            mavenPackaging              : 'aar',
-            mavenDescription            : 'update version v1.0.0-SNAPSHOT',
+            mavenVersion                :   'v1.0.0-SNAPSHOT',
+            mavenArtifactId             :   'permission',
+            mavenGroupId                :   'com.cn.cuinings',
+            mavenPackaging              :   'aar',
+            mavenDescription            :   'update version v1.0.0-SNAPSHOT',
             implementations     : [
-                    utils               : libsConfig.implementationLibs.utils,
-                    aspectjrt           : libsConfig.implementationLibs.aspectjrt,
-                    jetbrains           : libsConfig.implementationLibs.jetbrains,
+                    utils               :   libsConfig.implementationLibs.utils,
+                    aspectjrt           :   libsConfig.implementationLibs.aspectjrt,
+                    jetbrains           :   libsConfig.implementationLibs.jetbrains,
             ]
     ]
     appKey = [
